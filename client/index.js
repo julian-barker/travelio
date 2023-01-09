@@ -6,26 +6,34 @@ require('dotenv').config();
 const { io } = require('socket.io-client');
 const chalk = require('chalk');
 
-// const SERVER = process.env.SERVER_LOCAL;
-const SERVER = 'http://notifyme.us-west-2.elasticbeanstalk.com';
+// console.log('starting client...');
 
-// console.log('🚀 ~ file: index.js:10 ~ SERVER', SERVER);
+// For testing - use local server
+// const SERVER = process.env.SERVER_LOCAL;
+
+const SERVER = 'http://travelio-prod.us-west-2.elasticbeanstalk.com';
+
 const socket = io(`${SERVER}/chat`);
 
 const session = {};
 
-const authPrompt = require('./src/authPrompt')(socket, SERVER);
-const roomPrompt = require('./src/roomPrompt')(socket, SERVER, session);
+const authPrompt = require('./src/authPrompt')(SERVER);
+const roomPrompt = require('./src/roomPrompt')(socket, session);
 const messenger = require('./src/messenger')(socket, session, roomPrompt);
 
 socket.on('connect', async () => {
   console.clear();
   console.log('connected');
-
-  const { username, rooms, zip } = await authPrompt();
-  session.username = username;
-  session.roomList = rooms;
-  session.userZip = zip;
+  try {
+    const authResponse = await authPrompt();
+    
+    const { username, rooms, zip } = authResponse;
+    session.username = username;
+    session.roomList = rooms;
+    session.userZip = zip;
+  } catch (e) {
+    process.exit();
+  }
 
   await roomPrompt(session.roomList);
 

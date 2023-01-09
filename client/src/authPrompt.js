@@ -3,14 +3,15 @@ const base64 = require('base-64');
 const axios = require('axios');
 
 
-module.exports = (socket, SERVER) => async function authPrompt() {
+module.exports = (SERVER) => async function authPrompt() {
   const auth = {
     options: [
       {
         type: 'list',
         name: 'auth',
-        message: 'select one...',
-        choices: ['signin', 'signup'],
+        message: 
+          `\nWelcome to Travelio!\n\nPlease select one...`,
+        choices: ['signin', 'signup', 'cancel'],
       },
     ],
     signin: [
@@ -76,6 +77,10 @@ module.exports = (socket, SERVER) => async function authPrompt() {
   //signin logic
   const authAnswers = await inquirer.prompt(auth[authRoute]);
   const { username, password } = authAnswers;
+  
+  if(authRoute === 'cancel') {
+    return null;
+  }
 
   if(authRoute === 'signin') {
     try {
@@ -112,7 +117,6 @@ module.exports = (socket, SERVER) => async function authPrompt() {
       console.log(e.message);
       return authPrompt();
     }
-
   }
 
   return username;
