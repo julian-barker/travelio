@@ -4,6 +4,10 @@
 
 This repo is the client-side application for our travel chat/info server. It allows users to chat with other users after authenticating, and also allows users to enter special strings or commands to get specific API results printed to the console.
 
+## Demo
+
+- Follow [this link](https://julian-barker.github.io/travelio/) to see a demo of the CLI app!
+
 ## Usage
 
 - Primary:
