@@ -24,7 +24,7 @@ Trace Dugar
 
 ### Planning
 
-![UML](./server/assets/UML.png)
+![UML](./assets/UML.png)
 
 ### Demo
 
